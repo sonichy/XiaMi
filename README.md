@@ -1,21 +1,10 @@
-# Qt: 网易云音乐
-一款基于 Qt5.6 的网易云音乐播放器，已编译好的 NeteaseMusic 适用于 Linux 64 位 Qt 5.6 环境。  
-已完成功能：排行榜点播，搜索歌曲。  
-音乐版权归网易所有。  
+# Qt: 虾米音乐
+一款基于 Qt 5.6 的虾米音乐客户端，已编译好的 XiaMi 适用于 Linux 64 位 Qt 5.6 环境。  
+已完成功能：搜索歌曲播放。  
+音乐版权归虾米所有。  
 
-
-![alt](toplist.png)  
-
-![alt](songlist.png)  
-
-![alt](search.png)  
-
-![alt](lyric.png)  
+![alt](preview.png)  
 
 ### 参考
-UI：网易云音乐  
 API：  
-https://github.com/gcmwhite/CloudMusic-Bc-5  
-http://get.ftqq.com/7430.get
-
-跳转URL处理 https://blog.csdn.net/mingzznet/article/details/9724371
+https://github.com/listen1/listen1_chrome_extension
