@@ -77,14 +77,15 @@ MainWindow::MainWindow(QWidget *parent)
     tableWidget_playlist->setSelectionMode(QAbstractItemView::SingleSelection);
     tableWidget_playlist->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget_playlist->setColumnCount(7);
-    //tableWidget_playlist->setColumnHidden(4,true);
-    //tableWidget_playlist->setColumnHidden(5,true);
+    tableWidget_playlist->setColumnHidden(4,true);
+    tableWidget_playlist->setColumnHidden(5,true);
+    tableWidget_playlist->setColumnHidden(6,true);
     QStringList header;
-    header << "歌名" << "歌手" << "专辑" << "时长" << "歌曲URL" << "专辑封面" << "歌词URL";
+    header << "歌名" << "歌手" << "专辑" << "need_pay_flag" << "歌曲URL" << "专辑封面" << "歌词URL";
     tableWidget_playlist->setHorizontalHeaderLabels(header);
     tableWidget_playlist->horizontalHeader()->setStyleSheet("QHeaderView::section { color:white; background-color:#232326; }");
     tableWidget_playlist->verticalHeader()->setStyleSheet("QHeaderView::section { color:white; background-color:#232326; }");
-    tableWidget_playlist->setStyleSheet("QTableView { color:white; selection-background-color:#e6e6e6; }");
+    tableWidget_playlist->setStyleSheet("QTableView { color:white; selection-background-color:rgba(0,0,0,50); }");
     connect(tableWidget_playlist,SIGNAL(cellDoubleClicked(int,int)),this,SLOT(playSong(int,int)));
     vboxPL->addWidget(tableWidget_playlist);
     playlistWidget->setLayout(vboxPL);
@@ -108,10 +109,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(controlBar->pushButton_fullscreen,SIGNAL(pressed()),this,SLOT(enterFullscreen()));
     connect(controlBar->slider_progress,SIGNAL(sliderMoved(int)),this,SLOT(sliderProgressMoved(int)));
     connect(controlBar->slider_volume,SIGNAL(sliderMoved(int)),this,SLOT(sliderVolumeMoved(int)));
-    vbox->addWidget(controlBar);    
+    vbox->addWidget(controlBar);
     widget->setLayout(vbox);
 
-    player = new QMediaPlayer;    
+    player = new QMediaPlayer;
     connect(player,SIGNAL(durationChanged(qint64)),this,SLOT(durationChange(qint64)));
     connect(player,SIGNAL(positionChanged(qint64)),this,SLOT(positionChange(qint64)));
     connect(player,SIGNAL(volumeChanged(int)),this,SLOT(volumeChange(int)));
@@ -186,7 +187,7 @@ QByteArray MainWindow::getReply(QString surl)
     QNetworkAccessManager *NAM = new QNetworkAccessManager;
     QNetworkRequest request;
     request.setUrl(QUrl(surl));
-    request.setRawHeader("Referer","http://m.xiami.com/");
+    request.setRawHeader("Referer","http://www.xiami.com/");
     QNetworkReply *reply = NAM->get(request);
     QEventLoop loop;
     connect(reply,&QNetworkReply::finished,&loop,&QEventLoop::quit);
@@ -224,7 +225,7 @@ void MainWindow::showNormalMaximize()
 }
 
 void MainWindow::createPlaylist(long id, QString name)
-{    
+{
     navWidget->listWidget->setCurrentRow(2);
     label_playlistTitle->setText(name);
     tableWidget_playlist->setRowCount(0);
@@ -280,7 +281,7 @@ void MainWindow::durationChange(qint64 d)
 }
 
 void MainWindow::positionChange(qint64 p)
-{    
+{
     //qDebug() << "position =" << p;
     if(!controlBar->slider_progress->isSliderDown())controlBar->slider_progress->setValue(p);
     QTime t(0,0,0);
@@ -413,7 +414,7 @@ void MainWindow::search()
 {
     if(titleBar->lineEdit_search->text()!=""){
         navWidget->listWidget->setCurrentRow(2);
-        label_playlistTitle->setText("搜索：" + titleBar->lineEdit_search->text());        
+        label_playlistTitle->setText("搜索：" + titleBar->lineEdit_search->text());
         QString surl = "http://api.xiami.com/web?v=2.0&app_key=1&limit=20&r=search/songs&key=" + titleBar->lineEdit_search->text() + "&page=" + titleBar->lineEdit_page->text();
         qDebug() << surl;
         stackedWidget->setCurrentIndex(1);
@@ -433,6 +434,7 @@ void MainWindow::search()
 //            QTableWidgetItem *TWI = new QTableWidgetItem(QString("%1:%2").arg(ds/60,2,10,QLatin1Char(' ')).arg(ds%60,2,10,QLatin1Char('0')));
 //            TWI->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
 //            tableWidget_playlist->setItem(i,3,TWI);
+            tableWidget_playlist->setItem(i,3,new QTableWidgetItem(QString::number(songs[i].toObject().value("need_pay_flag").toInt())));
             tableWidget_playlist->setItem(i,4,new QTableWidgetItem(songs[i].toObject().value("listen_file").toString()));
             tableWidget_playlist->setItem(i,5,new QTableWidgetItem(songs[i].toObject().value("album_logo").toString()));
             tableWidget_playlist->setItem(i,6,new QTableWidgetItem(songs[i].toObject().value("lyric").toString()));
@@ -501,7 +503,7 @@ void MainWindow::getLyric(QString surl)
 }
 
 void MainWindow::swapLyric()
-{    
+{
     if(navWidget->listWidget->currentRow()==3){
         navWidget->listWidget->setCurrentRow(2);
     }else{
@@ -557,7 +559,7 @@ void MainWindow::dialogSet()
     pushButton_downloadPath->setFlat(true);
     connect(pushButton_downloadPath,SIGNAL(pressed()),this,SLOT(openDownloadPath()));
     gridLayout->addWidget(pushButton_downloadPath,1,0,1,1);
-    lineEdit_downloadPath = new QLineEdit;    
+    lineEdit_downloadPath = new QLineEdit;
     downloadPath = readSettings(QDir::currentPath() + "/config.ini", "config", "DownloadPath");
     lineEdit_downloadPath->setText(downloadPath);
     gridLayout->addWidget(lineEdit_downloadPath,1,1,1,1);
@@ -715,7 +717,7 @@ void MainWindow::dialogDownload()
     pushButton_path->setToolTip(downloadPath);
     connect(pushButton_path,SIGNAL(pressed()),this,SLOT(chooseDownloadPath()));
     gridLayout->addWidget(pushButton_path,2,1,1,1);
-    dialog->setLayout(gridLayout);    
+    dialog->setLayout(gridLayout);
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
     QPushButton *pushButton_confirm = new QPushButton("确定");
@@ -744,7 +746,7 @@ void MainWindow::download(QString surl, QString filepath)
     QNetworkAccessManager *NAM = new QNetworkAccessManager;
     QNetworkRequest request(url);
     QNetworkReply *reply = NAM->get(request);
-    QEventLoop loop;    
+    QEventLoop loop;
     connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     QFile file(filepath);

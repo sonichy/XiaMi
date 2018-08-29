@@ -22,9 +22,8 @@ TitleBar::TitleBar(QWidget *parent) : QWidget(parent)
     hbox->setSpacing(0);
 
     QLabel *label_icon = new QLabel;
-    label_icon->setPixmap(QPixmap(":/logo.png"));
-    hbox->addWidget(label_icon);
-
+    label_icon->setPixmap(QPixmap(":/logo.png"));    
+    hbox->addWidget(label_icon);    
     hbox->addStretch();
 
     lineEdit_search = new QLineEdit;
