@@ -22,14 +22,14 @@ TitleBar::TitleBar(QWidget *parent) : QWidget(parent)
     hbox->setSpacing(0);
 
     QLabel *label_icon = new QLabel;
-    label_icon->setPixmap(QPixmap(":/logo.png"));    
-    hbox->addWidget(label_icon);    
+    label_icon->setPixmap(QPixmap(":/logo.png"));
+    hbox->addWidget(label_icon);
     hbox->addStretch();
 
     lineEdit_search = new QLineEdit;
     lineEdit_search->setObjectName("lineEditSearch");
     lineEdit_search->setPlaceholderText("搜索音乐、歌手、歌词、用户");
-    lineEdit_search->setFixedWidth(200);    
+    lineEdit_search->setFixedWidth(200);
     hbox->addWidget(lineEdit_search);
 
     pushButton_search = new QPushButton;
@@ -182,7 +182,7 @@ void TitleBar::about()
     label->setStyleSheet("font-size:15px;");
     vbox->addWidget(label);
     label = new QLabel;
-    label->setText("         一款基于 Qt 的虾米音乐客户端。\n作者：黄颖\nE-mail: sonichy@163.com\n主页：https://github.com/sonichy\n音乐版权：虾米音乐\n参考：\nhttps://github.com/listen1/listen1_chrome_extension");
+    label->setText("         一款基于 Qt5 的虾米音乐客户端。\n作者：黄颖\nE-mail: sonichy@163.com\n主页：https://github.com/sonichy\n音乐版权：虾米音乐\n参考：\nhttps://github.com/listen1/listen1_chrome_extension");
     label->setStyleSheet("font-size:15px;");
     label->setWordWrap(true);
     label->setAlignment(Qt::AlignTop);
